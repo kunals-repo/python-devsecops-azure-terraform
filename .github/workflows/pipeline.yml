@@ -13,7 +13,7 @@ jobs:
 
   ci:
     name: CI Pipeline
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -92,66 +92,6 @@ jobs:
         with:
           sarif_file: 'vuln-result.sarif'
 
-# =========================================================
-# TERRAFORM INFRASTRUCTURE
-# =========================================================
-
-  terraform:
-    name: Terraform Infrastructure
-    runs-on: ubuntu-latest
-
-    needs:
-      - security_scan
-
-    defaults:
-      run:
-        working-directory: Terraform/
-
-    outputs:
-      vm_host: ${{ steps.terraform_outputs.outputs.vm_host }}
-      vm_username: ${{ steps.terraform_outputs.outputs.vm_username }}
-
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-        with:
-          terraform_version: 1.14.5
-
-      - name: Azure Login
-        uses: azure/login@v2
-
-        with:
-          creds: |
-            {
-              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
-              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
-              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
-              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
-            }
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-
-      - name: Get Terraform Outputs
-        id: terraform_outputs
-
-        run: |
-          echo "vm_host=$(terraform output -raw vm_public_ip)" >> $GITHUB_OUTPUT
-          echo "vm_username=$(terraform output -raw vm_username)" >> $GITHUB_OUTPUT
 
 # =========================================================
 # APPLICATION DEPLOYMENT
@@ -162,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
 
     needs:
-      - terraform
+      - security_scan
 
     steps:
 
@@ -173,8 +113,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
 
         with:
-          host: ${{ needs.terraform.outputs.vm_host }}
-          username: ${{ needs.terraform.outputs.vm_username }}
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_KEY }}
 
           script: |
@@ -184,7 +124,7 @@ jobs:
               sudo git clone https://github.com/${{ github.repository }} /opt/python-devops-project
             fi
 
-            sudo chown -R $USER:$USER /opt/python-devops-project
+            sudo chown -R $VM_USERNAME:$VM_USERNAME /opt/python-devops-project
 
             cd /opt/python-devops-project
 
@@ -202,7 +142,7 @@ jobs:
             After=network.target
 
             [Service]
-            User=${{ needs.terraform.outputs.vm_username }}
+            User=${{ secrets.VM_USERNAME }}
             WorkingDirectory=/opt/python-devops-project
 
             ExecStart=/opt/python-devops-project/venv/bin/gunicorn \
