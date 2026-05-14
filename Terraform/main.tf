@@ -1,7 +1,7 @@
 
 resource "azurerm_resource_group" "rg-block" {
   name = "linux-vm-rg"
-  location = "CanadaCentral"
+  location = "West US 2"
 }
 
 resource "azurerm_virtual_network" "vnet-block" {
