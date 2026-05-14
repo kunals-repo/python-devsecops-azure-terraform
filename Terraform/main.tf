@@ -64,7 +64,7 @@ resource "azurerm_linux_virtual_machine" "linux-vm-block" {
   name                = "linux-vm"
   resource_group_name = azurerm_resource_group.rg-block.name
   location            = azurerm_resource_group.rg-block.location
-  size                = "Standard_DC1s_v3"
+  size                = "Standard_D2s_v3"
   admin_username      = "kunal"
   network_interface_ids = [
     azurerm_network_interface.nic-card.id,
