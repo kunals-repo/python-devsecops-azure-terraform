@@ -130,7 +130,7 @@ jobs:
 
             sudo git pull origin main
 
-            python3 -m venv venv
+            sudo apt install python3 -m venv venv
 
             source venv/bin/activate
 
@@ -149,8 +149,6 @@ jobs:
             --bind 0.0.0.0:5000 \
             app.main:app
 
-            Restart=always
-
             [Install]
             WantedBy=multi-user.target
             EOF
@@ -160,7 +158,5 @@ jobs:
             sudo systemctl enable flaskapp
 
             sudo systemctl restart flaskapp
-
-            sudo systemctl restart nginx
 
             echo "Deployment Successful!"
