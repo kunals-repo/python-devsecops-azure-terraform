@@ -1,0 +1,64 @@
+#This is terraform code that we have removed from pipeline file, because we are trying to deploy azure linux virutal machine & in that vm we are
+#planning to deploying python app , but azure linux vm creation fail because of azure free subscription sku unavailbility limitations.
+#Therefore , we are going to deploy python app on self-hosted runner.
+# We are referring below code to how to deploy vm from terraform & deploy app in it.
+
+# =========================================================
+# TERRAFORM INFRASTRUCTURE
+# =========================================================
+
+  terraform:
+    name: Terraform Infrastructure
+    runs-on: ubuntu-latest
+
+    needs:
+      - security_scan
+
+    defaults:
+      run:
+        working-directory: Terraform/
+
+    outputs:
+      vm_host: ${{ steps.terraform_outputs.outputs.vm_host }}
+      vm_username: ${{ steps.terraform_outputs.outputs.vm_username }}
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+        with:
+          terraform_version: 1.14.5
+
+      - name: Azure Login
+        uses: azure/login@v2
+
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+            }
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+
+      - name: Get Terraform Outputs
+        run: |
+          echo "vm_host=$(terraform output -raw vm_public_ip)" >> $GITHUB_OUTPUT
+          echo "vm_username=$(terraform output -raw vm_username)" >> $GITHUB_OUTPUT
+
