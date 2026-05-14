@@ -49,6 +49,15 @@ jobs:
       - name: Run Unit Tests
         run: PYTHONPATH=. pytest tests/test_main.py
 
+      - name: Build Python Package
+        run: python -m build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:     
+          name: python-package-${{ matrix.python-version }}
+          path: dist/
+
 # =========================================================
 # SECURITY SCAN
 # =========================================================
