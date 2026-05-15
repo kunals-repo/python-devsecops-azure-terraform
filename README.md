@@ -1,4 +1,4 @@
-🚀 Project Overview
+**🚀 Project Overview**
 
 This project demonstrates an advanced Cloud DevOps CI/CD pipeline for deploying a Python application on an Azure Linux Virtual Machine 
 using GitHub Actions automation.
@@ -17,7 +17,8 @@ The pipeline automates the complete software delivery lifecycle including:
 
 
 
-🔄 CI/CD Workflow
+
+**🔄 CI/CD Workflow**
 
 
 Pipeline workflow dispatch
@@ -78,7 +79,8 @@ Creation & restart Flask Application Service
 Application Live on Azure VM
 
 
-🎯 Learning Outcomes
+
+**🎯 Learning Outcomes**
 
 This project helped in understanding and implementing:
 
