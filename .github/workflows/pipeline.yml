@@ -161,4 +161,5 @@ jobs:
             echo "Deployment Successful!"
 
 # =========================================================
-# installing the docker inside the self-hosted runner , because appleboy/ssh-action@v1.0.3 github actions needs the docker package on linux vm
+# installing the docker inside the self-hosted runner , because appleboy/ssh-action@v1.0.3 github actions needs the docker package on linux vm.
+# So actions requires the container to run. Also , add the linux user inot the docker group. So user can run required docker command without root access.
