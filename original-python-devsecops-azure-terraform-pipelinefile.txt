@@ -110,9 +110,6 @@ jobs:
       run:
         working-directory: Terraform/
 
-    outputs:
-      vm_host: ${{ steps.terraform_outputs.outputs.vm_host }}
-      vm_username: ${{ steps.terraform_outputs.outputs.vm_username }}
 
     steps:
 
@@ -156,6 +153,10 @@ jobs:
           echo "vm_host=$(terraform output -raw vm_public_ip)" >> $GITHUB_OUTPUT
           echo "vm_username=$(terraform output -raw vm_username)" >> $GITHUB_OUTPUT
 
+       outputs:
+         vm_host: ${{ steps.terraform_outputs.outputs.vm_host }}
+         vm_username: ${{ steps.terraform_outputs.outputs.vm_username }}
+
 # =========================================================
 # APPLICATION DEPLOYMENT
 # =========================================================
@@ -193,7 +194,7 @@ jobs:
 
             sudo git pull origin main
 
-            python3 -m venv venv
+            sudo apt install python3 -m venv venv
 
             source venv/bin/activate
 
@@ -223,7 +224,5 @@ jobs:
             sudo systemctl enable flaskapp
 
             sudo systemctl restart flaskapp
-
-            sudo systemctl restart nginx
 
             echo "Deployment Successful!"
