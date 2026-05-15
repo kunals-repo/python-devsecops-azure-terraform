@@ -159,3 +159,6 @@ jobs:
             sudo systemctl restart flaskapp
 
             echo "Deployment Successful!"
+
+# =========================================================
+# installing the docker inside the self-hosted runner , because appleboy/ssh-action@v1.0.3 github actions needs the docker package on linux vm
