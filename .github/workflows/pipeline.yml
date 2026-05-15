@@ -64,7 +64,7 @@ jobs:
 
   security_scan:
     name: Trivy Security Scan
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     needs: ci
 
@@ -99,10 +99,9 @@ jobs:
 
   deploy:
     name: Deploy Application
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
-    needs:
-      - security_scan
+    needs: security_scan
 
     steps:
 
