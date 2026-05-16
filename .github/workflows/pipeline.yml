@@ -129,7 +129,7 @@ jobs:
 
             sudo git pull origin main
 
-            sudo apt install python3 -m venv venv
+            sudo python3 -m venv venv
 
             source venv/bin/activate
 
