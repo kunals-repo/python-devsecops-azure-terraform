@@ -88,13 +88,7 @@ This project helped in understanding and implementing:
 
 ✅ Hosting self-hosted runner
 
-✅ DevSecOps security practices
-
-✅ Infrastructure as Code (IaC)
-
-✅ GitHub Actions workflow automation
-
-✅ Azure cloud infrastructure provisioning
+✅ Azure infrastructure provisioning with terraform
 
 ✅ Linux server management
 
@@ -108,5 +102,5 @@ This project helped in understanding and implementing:
 
 ✅ Automated SSH-based deployments
 
-✅ Production-style DevOps pipelines
+✅ Github Actions Output Variables
 
